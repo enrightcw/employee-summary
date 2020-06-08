@@ -36,7 +36,6 @@ const render = require("./lib/htmlRenderer");
 
 const renderTeam = employeeInfoArray =>{
     fs.writeFile(outputPath, render(employeeInfoArray), () => {});
-    console.log(employeeInfoArray);
 }
 
 const teamInfo = () =>{
@@ -123,21 +122,31 @@ const teamInfo = () =>{
         },{
             type: "input",
             message: "Please enter the employee's email address.",
-            name: "email"
+            name: "email",
+            validate: function (email) {
+    
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+    
+                if (valid) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         },{
             type: "list",
-            choices: ["Intern", "Engineer", "Manager"],
+            choices: ["Manager", "Engineer", "Intern"],
             name: "role"
         }]).then(({ name, id, email, role }, error)=>{
             switch (role){
-                case "Intern":
-                promptInternInfo(name, id, email);
+                case "Manager":
+                promptManagerInfo(name, id, email);
                 break;
                 case "Engineer":
                 promptEngineerInfo(name, id, email);
                 break;
-                case "Manager":
-                promptManagerInfo(name, id, email);
+                case "Intern":
+                promptInternInfo(name, id, email);
                 break;
             }
         })
